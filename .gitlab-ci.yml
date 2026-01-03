@@ -36,10 +36,11 @@ build:
 # -------------------
 deploy:
   stage: deploy
-  image: bitnami/kubectl:latest
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
   script:
     - mkdir -p ~/.kube
     - cp kubeconfig_dummy ~/.kube/config
+    - kubectl version --client
     - kubectl apply -f k8s/
-  only:
-    - main
