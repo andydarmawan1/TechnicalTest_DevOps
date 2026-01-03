@@ -43,6 +43,6 @@ deploy:
     - pwd
     - ls -la
     - mkdir -p ~/.kube
-    - cp kubeconfig_dummy ~/.kube/config
+    - cp kubeconfig_dummy.yaml ~/.kube/config
     - kubectl version --client
     - kubectl apply -f k8s/
