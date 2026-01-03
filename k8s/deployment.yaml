@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kirito
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kirito
+  template:          # ← DI SINI
+    metadata:
+      labels:
+        app: kirito
+    spec:
+      containers:
+        - name: kirito
+          image: kirito:latest
+          ports:
+            - containerPort: 8080
+

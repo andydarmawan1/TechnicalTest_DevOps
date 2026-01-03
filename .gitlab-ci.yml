@@ -1,0 +1,45 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  IMAGE_NAME: kirito
+  IMAGE_TAG: latest
+
+# -------------------
+# TEST STAGE
+# -------------------
+test:
+  stage: test
+  image: golang:1.24
+  script:
+    - go version
+    - go mod tidy
+    - go test ./...
+
+# -------------------
+# BUILD STAGE
+# -------------------
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+  only:
+    - main
+
+# -------------------
+# DEPLOY STAGE
+# -------------------
+deploy:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - mkdir -p ~/.kube
+    - cp kubeconfig_dummy ~/.kube/config
+    - kubectl apply -f k8s/
+  only:
+    - main
