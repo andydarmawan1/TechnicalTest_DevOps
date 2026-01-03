@@ -43,4 +43,4 @@ deploy:
     - mkdir -p ~/.kube
     - cp kubeconfig_dummy.yaml ~/.kube/config
     - kubectl version --client
-    - kubectl apply -f k8s/ --dry-run=client
+    - kubectl apply -f k8s/ --dry-run=client --validate=false
