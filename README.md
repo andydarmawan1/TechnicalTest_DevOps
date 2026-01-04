@@ -114,5 +114,3 @@ This project demonstrates:
 - Kubernetes deployment design
 - Real CI/CD implementation using GitLab CI
 
-All components are implemented with **clarity, correctness, and real-world DevOps considerations** in mind.
-
