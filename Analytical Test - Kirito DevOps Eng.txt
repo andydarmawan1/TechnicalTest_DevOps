@@ -1,0 +1,66 @@
+Analytical Test - Kirito DevOps Engineer Test
+
+1. Menemukan Root Cause ketika endpoint return 5xx error:
+
+- Cek log aplikasi
+  - Periksa log Gin atau log container di Kubernetes menggunakan:
+      kubectl logs <pod-name>
+  - Cari error runtime, panic, atau stack trace
+  - Pastikan log menampilkan request yang gagal (method, path, header, body)
+
+- Cek metrics & monitoring
+  - Gunakan Prometheus & Grafana atau tools monitoring lain untuk memeriksa:
+      - CPU & memory usage pod
+      - Response time
+      - Number of requests per second
+  - Pastikan tidak ada spike traffic yang menyebabkan overload
+
+- Cek health & readiness probe
+  - Pastikan readiness/liveness probe di Kubernetes berjalan dengan benar
+  - Pod yang gagal probe bisa menyebabkan 5xx error jika load balancer mengirim traffic ke pod yang tidak sehat
+
+- Cek database / external service
+  - Periksa service eksternal atau database yang digunakan apakah mengalami timeout atau gagal
+
+- Reproduksi error
+  - Gunakan curl, hey, atau Apache Bench untuk memanggil endpoint dan memantau error secara real-time
+
+---
+
+2. Resolusi agar tidak terjadi lagi di masa depan:
+
+- Code fix
+  - Tangani panic dan error di Gin menggunakan recover()
+  - Validasi input sebelum diproses
+
+- Resource scaling
+  - Implementasikan Horizontal Pod Autoscaler (HPA) untuk menambah jumlah pod saat traffic tinggi
+  - Atur limit dan request CPU & memory di pod spec
+
+- Improved monitoring & alerting
+  - Tambahkan alert untuk 5xx error rate tinggi, CPU/memory usage tinggi, dan latency
+
+- Circuit breaker & retries
+  - Implementasikan retry dengan backoff dan circuit breaker pattern untuk request ke DB atau external service
+
+- Logging structured & centralized
+  - Gunakan ELK Stack atau Loki untuk mempermudah tracing dan analisis log
+
+- Load testing rutin
+  - Jalankan load test di staging untuk memastikan service bisa handle traffic tinggi
+
+---
+
+3. Tools yang digunakan untuk trace dan resolve masalah:
+
+| Tool                    | Fungsi / Deskripsi |
+|-------------------------|------------------|
+| kubectl                 | Memeriksa status pod, service, dan logs di Kubernetes |
+| Docker logs             | Cek log container untuk error runtime |
+| Prometheus & Grafana    | Monitoring metrics aplikasi, pod, dan cluster; visualisasi CPU, memory, request, error rate |
+| ELK Stack / Loki        | Centralized logging, tracing, dan analisis log untuk menemukan root cause |
+| Jaeger / OpenTelemetry  | Distributed tracing untuk melihat latency atau bottleneck di microservice |
+| HPA (Horizontal Pod Autoscaler) | Auto scaling pod berdasarkan metric CPU/memory atau custom metric |
+| Curl / Hey / Apache JMeter | Testing manual atau load testing untuk reproduksi error |
+| Sentry / Crashlytics    | Melacak error aplikasi, stacktrace, dan issue di runtime |
+
